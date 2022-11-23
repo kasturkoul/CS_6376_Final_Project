@@ -1,10 +1,5 @@
 from enum import Enum
 
-'''
-- one way in and out 
-- train stops for certain period of time 
-- alert other trains to stop outside station in a queue
-'''
 class StationState(Enum):
     # Station signal is Green, Red, or the train has Exited 
     GREEN = 1 # Outter signal -- train can enter station 
@@ -20,10 +15,11 @@ class ArriveEvent(Enum):
     ENTER = 3
 
 class Station:
-    def __init__(self):
+    def __init__(self, delay):
         self.timer = 0
         self.occupied = False
         self.near = False
+        self.delay = delay
 
     def step(self, out):
         if self.occupied and out == ArriveEvent.ENTER:
@@ -53,9 +49,9 @@ class Station:
             self.timer = 0 # set a timer 
             outersignal = StationState.RED # Tell other trains to stop -- signal is GREEN 
 
-        if self.occupied and self.timer < 10:
+        if self.occupied and self.timer < self.delay:
             innersignal = StationState.BOARD # Train waits at the station
-        elif self.timer >= 10: # If timer hits 10 counts 
+        elif self.timer >= self.delay: # If timer hits 10 counts 
             innersignal = StationState.EXIT # Train exits the station 
         
         return outersignal, innersignal
@@ -67,7 +63,7 @@ def testwait(station):
         print(state)
 
 def test():
-    station = Station()
+    station = Station(5)
     print(station.step(None))
     print(station.step(ArriveEvent.ARRIVE))
     print(station.step(ArriveEvent.ENTER))
