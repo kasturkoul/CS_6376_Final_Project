@@ -43,7 +43,7 @@ class Merge:
 
         # Exception handling - both signals should not be green 
         if signal_1 == MergeState.GREEN and signal_2 == MergeState.GREEN:
-            raise Exception("Bridge: Safety violation")
+            raise Exception("Merge: Safety violation")
 
         return signal_1, signal_2
 
