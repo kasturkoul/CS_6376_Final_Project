@@ -56,6 +56,24 @@ class Station:
         
         return outersignal, innersignal
 
+class StationInterface:
+    def __init__(self):
+        self.station = Station()
+        self.ports = [None, None]
+        self.action_taken = (None, None)
+        
+    def is_waiting(self, port):
+        self.ports[port] = ArriveEvent.ARRIVE
+    
+    def step(self):
+        pass
+
+    def is_consumed(self, port):
+        return self.ports[port] == ArriveEvent.LEAVE
+    
+    def is_produced(self, port):
+        return
+
 def testwait(station):
     state = station.step(None)
     while state[1] != StationState.EXIT:
