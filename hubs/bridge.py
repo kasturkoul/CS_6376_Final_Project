@@ -47,10 +47,44 @@ class Bridge:
 
         return signal_W, signal_E
 
+class BridgeInterface:
+    def __init__(self):
+        self.bridge = Bridge()
+        self.ports = [None, None]
+        self.action_taken = (None, None)
+    
+    def is_waiting(self, port):
+        self.ports[port] = ArriveEvent.ARRIVE
+    
+    def step(self):
+        out_W, out_E = self.ports
+        self.action_taken = self.bridge.step(out_W, out_E)
+        self.ports = [ArriveEvent.LEAVE if self.action_taken[0] == BridgeState.GREEN and self.ports[0] != ArriveEvent.LEAVE else None,
+                      ArriveEvent.LEAVE if self.action_taken[1] == BridgeState.GREEN and self.ports[1] != ArriveEvent.LEAVE else None]
+
+    def is_consumed(self, port):
+        return self.ports[port] == ArriveEvent.LEAVE
+    
+    def is_produced(self, port):
+        return self.ports[1 - port] == ArriveEvent.LEAVE
+
+
 # Test
 def test():
+    bridgeInterface = BridgeInterface()
+    bridgeInterface.is_waiting(0)
+    bridgeInterface.is_waiting(1)
+    for i in range(0, 5):
+        bridgeInterface.step()
+        print("Port 0: Consumed ({}), Produced ({})".format(bridgeInterface.is_consumed(0), bridgeInterface.is_produced(0)))
+        print("Port 1: Consumed ({}), Produced ({})".format(bridgeInterface.is_consumed(1), bridgeInterface.is_produced(1)))
+        print()
+
+    
+    """
     bridge = Bridge()
     print(bridge.step(ArriveEvent.ARRIVE, ArriveEvent.ARRIVE))
+    print(bridge.step(None, None))
     print(bridge.step(None, ArriveEvent.LEAVE))
     print(bridge.step(ArriveEvent.LEAVE, None))
     print(bridge.step(None, None))
@@ -62,5 +96,7 @@ def test():
     print(bridge.step(None, None))
     print(bridge.step(None, ArriveEvent.LEAVE))
     print(bridge.step(None, None))
+    """
+
 
 test()

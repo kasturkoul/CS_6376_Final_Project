@@ -47,8 +47,44 @@ class Merge:
 
         return signal_1, signal_2
 
+class MergeInterface:
+    def __init__(self):
+        self.bridge = Merge()
+        self.ports = [None, None, None]
+        self.action_taken = (None, None)
+    
+    def is_waiting(self, port):
+        self.ports[port] = ArriveEvent.ARRIVE
+    
+    def step(self):
+        out_W, out_E, _ = self.ports
+        self.action_taken = self.bridge.step(out_W, out_E)
+        self.ports = [ArriveEvent.LEAVE if self.action_taken[0] == MergeState.GREEN and self.ports[0] != ArriveEvent.LEAVE else None,
+                      ArriveEvent.LEAVE if self.action_taken[1] == MergeState.GREEN and self.ports[1] != ArriveEvent.LEAVE else None,
+                      None]
+
+    def is_consumed(self, port):
+        return self.ports[port] == ArriveEvent.LEAVE
+    
+    def is_produced(self, port):
+        if port == 2:
+            return self.ports[0] == ArriveEvent.LEAVE or self.ports[1] == ArriveEvent.LEAVE
+        else:
+            return False
+
 # Test
 def test():
+    mergeInterface = MergeInterface()
+    mergeInterface.is_waiting(0)
+    mergeInterface.is_waiting(1)
+    for i in range(0, 5):
+        mergeInterface.step()
+        print("Port 0: Consumed ({}), Produced ({})".format(mergeInterface.is_consumed(0), mergeInterface.is_produced(0)))
+        print("Port 1: Consumed ({}), Produced ({})".format(mergeInterface.is_consumed(1), mergeInterface.is_produced(1)))
+        print("Port 2: Consumed ({}), Produced ({})".format(mergeInterface.is_consumed(2), mergeInterface.is_produced(2)))
+        print()
+
+    """
     bridge = Merge()
     print(bridge.step(ArriveEvent.ARRIVE, ArriveEvent.ARRIVE))
     print(bridge.step(None, ArriveEvent.LEAVE))
@@ -62,5 +98,6 @@ def test():
     print(bridge.step(None, None))
     print(bridge.step(None, ArriveEvent.LEAVE))
     print(bridge.step(None, None))
+    """
 
 test()
