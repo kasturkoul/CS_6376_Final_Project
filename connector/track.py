@@ -41,4 +41,4 @@ def test_track():
     track.step()
     print(track.is_occupied())
 
-test_track()
+#test_track()

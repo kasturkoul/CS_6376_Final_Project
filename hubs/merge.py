@@ -100,4 +100,4 @@ def test():
     print(bridge.step(None, None))
     """
 
-test()
+#test()
