@@ -7,22 +7,22 @@ class ArriveEvent(Enum):
 
 class TrackInterface:
     def __init__(self):
-        self.occupied = False # Bool, if train is on track 
+        self.trains = 0 # Bool, if train is on track 
 
     def is_waiting(self):
-        if self.occupied: # Throws exception if two trains are on the track
-            raise Exception("Track: Safety violation")
-
-        self.occupied = True # Put train on track
+        self.trains += 1 # Put train on track
         
     def is_leaving(self):
-        self.occupied = False # Take train off track
+        if self.trains > 0:
+            self.trains -= 1
+        else:
+            raise Exception("Track: Safety violation")
 
     def step(self):
         pass
 
-    def is_occupied(self):
-        return self.occupied # Bool for if train is on track
+    def train_count(self):
+        return self.trains
 
 def test_track():
     track = TrackInterface()
