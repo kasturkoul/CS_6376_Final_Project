@@ -108,5 +108,5 @@ sim.add_train(track_4)
 sim.add_train(track_4)
 sim.add_train(track_4)
 
-for i in range(20):
+for i in range(5000):
     sim.step()
