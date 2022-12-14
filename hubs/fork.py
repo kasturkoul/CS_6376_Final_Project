@@ -38,7 +38,6 @@ class ForkInterface:
 
     def is_waiting(self, port):
         self.ports[port] = r.choice([Direction.OUT_1, Direction.OUT_2])
-        print("Random direction: {}".format(self.ports[port]))
         self.entering = True
 
     def step(self):
