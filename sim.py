@@ -102,10 +102,11 @@ track_4 = sim.add_track(merge_id, 2, station_id, 0)
 print("Tracks:", track_0, track_1, track_2, track_3, track_4)
 print("Hubs:", station_id, fork_id, bridge_id, merge_id)
 
-sim.add_train(station_id, 0)
-sim.add_train(bridge_id, 0)
-sim.add_train(bridge_id, 1)
-sim.add_train(merge_id, 0)
+sim.add_train(track_4)
+sim.add_train(track_4)
+sim.add_train(track_4)
+sim.add_train(track_4)
+sim.add_train(track_4)
 
-for i in range(30):
+for i in range(5000):
     sim.step()
