@@ -70,13 +70,18 @@ class BridgeInterface:
         return self.ports[port] == ArriveEvent.LEAVE
 
     def is_produced(self, port):
-        return self.ports[1 - port] == ArriveEvent.LEAVE
+        if port < 2:
+            return self.ports[1 - port] == ArriveEvent.LEAVE
+        else:
+            return False
 
     def is_awaiting(self, port):
         if port == 0:
             return self.ports[port] == ArriveEvent.ARRIVE or self.bridge.near_W == 1
-        else:
+        elif port == 1:
             return self.ports[port] == ArriveEvent.ARRIVE or self.bridge.near_E == 1
+        else:
+            return False
 
 
 # Test

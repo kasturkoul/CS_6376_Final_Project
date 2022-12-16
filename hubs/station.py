@@ -107,7 +107,8 @@ class StationInterface:
             return False
 
     def is_awaiting(self, port):
-        return self.ports[port] == ArriveEvent.ARRIVE
+        if port < 2:
+            return self.ports[port] == ArriveEvent.ARRIVE
 
 
 '''
