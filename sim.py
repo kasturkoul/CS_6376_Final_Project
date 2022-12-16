@@ -73,17 +73,20 @@ class Sim:
         else:
             self.tracks[id][0].is_waiting()
 
-
-"""
-sim = Sim()
-station_id = sim.add_hub(HubType.STATION, 1)
-track_id = sim.add_track(station_id, 1, station_id, 0)
-
-sim.add_train(track_id)
-
-for i in range(20):
-    sim.step()
-"""
+    def count_trains(self):
+        count = 0
+        for hub in self.hubs.values():
+            count += int(hub.is_awaiting(0) == True)
+            count += int(hub.is_awaiting(1) == True)
+            count += int(hub.is_awaiting(2) == True)
+            count += int(hub.is_produced(0) == True)
+            count += int(hub.is_produced(1) == True)
+            count += int(hub.is_produced(2) == True)
+            if hub is StationInterface:
+                count += int(hub.occupied)
+        for track in self.tracks.values():
+            count += track[0].train_count()
+        return count
 
 sim = Sim()
 station_id = sim.add_hub(HubType.STATION, 2)
@@ -91,17 +94,22 @@ fork_id = sim.add_hub(HubType.FORK)
 track_0 = sim.add_track(station_id, 1, fork_id, 0)
 
 bridge_id = sim.add_hub(HubType.BRIDGE)
-sim.add_track(fork_id, 1, bridge_id, 0)
-track_1 = sim.add_track(fork_id, 2, bridge_id, 1)
+track_1 = sim.add_track(fork_id, 1, bridge_id, 0)
+track_2 = sim.add_track(fork_id, 2, bridge_id, 1)
 
 merge_id = sim.add_hub(HubType.MERGE)
-track_2 = sim.add_track(bridge_id, 0, merge_id, 0)
-track_3 = sim.add_track(bridge_id, 1, merge_id, 1)
-track_4 = sim.add_track(merge_id, 2, station_id, 0)
+track_3 = sim.add_track(bridge_id, 0, merge_id, 0)
+track_4 = sim.add_track(bridge_id, 1, merge_id, 1)
+track_5 = sim.add_track(merge_id, 2, station_id, 0)
 
-print("Tracks:", track_0, track_1, track_2, track_3, track_4)
+print("Tracks:", track_0, track_1, track_2, track_3, track_4, track_5)
 print("Hubs:", station_id, fork_id, bridge_id, merge_id)
 
+sim.add_train(track_4)
+sim.add_train(track_4)
+sim.add_train(track_4)
+sim.add_train(track_4)
+sim.add_train(track_4)
 sim.add_train(track_4)
 sim.add_train(track_4)
 sim.add_train(track_4)
@@ -110,3 +118,5 @@ sim.add_train(track_4)
 
 for i in range(5000):
     sim.step()
+
+print("Total train count:", sim.count_trains())
