@@ -1,5 +1,5 @@
 from enum import Enum
-
+import random as r
 
 class BridgeState(Enum):
     # State at the gates to the bridge
@@ -34,15 +34,24 @@ class Bridge:
         if out_W == ArriveEvent.LEAVE:  # If train is leaving W gate
             self.near_W = 0
 
-        if not self.near_E:  # If train is not near E gate
-            self.east = BridgeState.RED  # E signal is RED
-        elif self.west == BridgeState.RED:  # If W gate signal is RED
-            self.east = BridgeState.GREEN  # E gate signal is GREEN
+        def handle_east():
+            if not self.near_E:  # If train is not near E gate
+                self.east = BridgeState.RED  # E signal is RED
+            elif self.west == BridgeState.RED:  # If W gate signal is RED
+                self.east = BridgeState.GREEN  # E gate signal is GREEN
 
-        if not self.near_W:  # If train is not near W gate
-            self.west = BridgeState.RED  # W gate signal is RED
-        elif self.east == BridgeState.RED:  # If E gate signal is RED
-            self.west = BridgeState.GREEN  # W gate signal is GREEN
+        def handle_west():
+            if not self.near_W:  # If train is not near W gate
+                self.west = BridgeState.RED  # W gate signal is RED
+            elif self.east == BridgeState.RED:  # If E gate signal is RED
+                self.west = BridgeState.GREEN  # W gate signal is GREEN
+
+        if (r.random() < 0.5):
+            handle_east()
+            handle_west()
+        else:
+            handle_west()
+            handle_east()
 
         # Exception handling - both signals should not be green
         if signal_W == BridgeState.GREEN and signal_E == BridgeState.GREEN:
